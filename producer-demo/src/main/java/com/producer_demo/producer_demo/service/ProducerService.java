@@ -1,6 +1,7 @@
 package com.producer_demo.producer_demo.service;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class ProducerService {
 		return "Vendor: " + vendor + "Amount $" + amount;
 	}
 
-	// SendPaymentTransactions Asynchronously
-	@Scheduled(fixedRate = 2000)
+//	 SendPaymentTransactions Asynchronously
+//	@Scheduled(fixedRate = 2000)
 	public void SendPaymentTransactionsAsynchronously() {
 
 		String transaction = generateRandomTransaction();
@@ -52,6 +53,21 @@ public class ProducerService {
 
 	private void onFailure(Throwable throwable) {
 		log.info("Error occurred while producing the message {}", throwable);
+	}
+
+	// SendPaymentTransactions-2)synchronously
+
+	@Scheduled(fixedRate = 2000)
+	public SendResult<String, String> SendPaymentTransactionsSynchronously()
+			throws ExecutionException, InterruptedException {
+		String transaction = generateRandomTransaction();
+		log.info("Sending payment transactions {}", transaction);
+		SendResult<String, String> sendResult = kafkaTemplate
+				.send("payment-topic", generateTransactionKey(), transaction).get();
+		log.info("Received new metadata. \n" + "Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
+				sendResult.getRecordMetadata().topic(), sendResult.getRecordMetadata().partition(),
+				sendResult.getRecordMetadata().offset(), sendResult.getRecordMetadata().timestamp());
+		return sendResult;
 	}
 
 	public String generateTransactionKey() {
