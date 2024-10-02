@@ -33,7 +33,7 @@ public class ProducerConfiguration {
 
 	// NewTopic
 	/*
-	 * topic name : payment-topic , replication : 3 , partition : 1
+	 * topic name : payment-topic , partition : 3 , replication : 1
 	 */
 	@Bean
 	public NewTopic paymentTopic() {
