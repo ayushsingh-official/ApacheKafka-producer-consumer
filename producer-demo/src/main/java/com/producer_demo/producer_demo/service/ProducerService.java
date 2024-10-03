@@ -28,7 +28,7 @@ public class ProducerService {
 		return "Vendor: " + vendor + "Amount $" + amount;
 	}
 
-//	 SendPaymentTransactions Asynchronously
+//	SendPaymentTransactions Asynchronously
 //	@Scheduled(fixedRate = 2000)
 	public void SendPaymentTransactionsAsynchronously() {
 
@@ -55,8 +55,8 @@ public class ProducerService {
 		log.info("Error occurred while producing the message {}", throwable);
 	}
 
+	
 	// SendPaymentTransactions-2)synchronously
-
 	@Scheduled(fixedRate = 2000)
 	public SendResult<String, String> SendPaymentTransactionsSynchronously()
 			throws ExecutionException, InterruptedException {
