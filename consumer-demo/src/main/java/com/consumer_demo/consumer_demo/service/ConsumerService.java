@@ -3,6 +3,7 @@ package com.consumer_demo.consumer_demo.service;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,8 @@ public class ConsumerService {
 	private KafkaTemplate<String, String> kafkaTemplate;
 
 //	@RetryableTopic(attempts = "3", backoff = @Backoff(delay = 3000, multiplier = 2))
-	@KafkaListener(topics = "payment-topic", groupId = "group_id", containerFactory = "concurrentKafkaListenerContainerFactory")
+	@KafkaListener(topics = "payment-topic", groupId = "group_id", containerFactory = "concurrentKafkaListenerContainerFactory", topicPartitions = @TopicPartition(topic = "payment-topic", partitions = {
+			"0", "1" }))
 	public void consume(ConsumerRecord<String, String> message) {
 		log.info("Key: {} | Value: {}", message.key(), message.value());
 		log.info("Partition: {} | Offset: {}", message.partition(), message.offset());

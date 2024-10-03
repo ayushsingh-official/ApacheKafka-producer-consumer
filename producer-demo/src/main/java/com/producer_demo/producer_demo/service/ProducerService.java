@@ -62,7 +62,7 @@ public class ProducerService {
 		String transaction = generateRandomTransaction();
 		log.info("Sending payment transactions {}", transaction);
 		SendResult<String, String> sendResult = kafkaTemplate
-				.send("payment-topic", 2, generateTransactionKey(), transaction).get();
+				.send("payment-topic", generateTransactionKey(), transaction).get();
 		log.info("Received new metadata. \n" + "Topic: {}, Partition: {}, Offset: {}, Timestamp: {}",
 				sendResult.getRecordMetadata().topic(), sendResult.getRecordMetadata().partition(),
 				sendResult.getRecordMetadata().offset(), sendResult.getRecordMetadata().timestamp());
